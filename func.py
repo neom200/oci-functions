@@ -3,6 +3,15 @@ import json
 from fdk import response
 
 def handler(ctx, data: io.BytesIO=None):
+    name = "World"
+    return response.Response(
+        ctx, response_data=json.dumps(
+            {"message": "Hello {0}".format(name)}),
+        headers={"Content-Type": "application/json"}
+    )
+
+"""
+def handler(ctx, data: io.BytesIO=None):
     print("Entering Python Hello World handler", flush=True)
     name = "World"
     try:
@@ -18,3 +27,4 @@ def handler(ctx, data: io.BytesIO=None):
             {"message": "Hello {0}".format(name)}),
         headers={"Content-Type": "application/json"}
     )
+"""
