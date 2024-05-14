@@ -2,4 +2,4 @@ fdk
 pandas
 numpy
 oci
-ads
+oracle-ads
