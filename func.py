@@ -43,6 +43,6 @@ def handler(ctx, data: io.BytesIO=None):
     except Exception as ex:
         return response.Response(
             ctx, response_data=json.dumps(
-                {"message": "{0}".format(str(e))}),
+                {"message": "{0}".format(str(ex))}),
             headers={"Content-Type": "application/json"}
     )
