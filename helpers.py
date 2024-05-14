@@ -1,4 +1,4 @@
-import numpy as np
+#import numpy as np
 import pandas as pd
 from oci.config import from_file
 from oci.object_storage import ObjectStorageClient

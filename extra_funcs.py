@@ -1,3 +1,5 @@
+import numpy as np
+
 def create_columns_map(df):
     novas_cols = list(df.iloc[0, :])
     old_cols = list(df.columns.values)
