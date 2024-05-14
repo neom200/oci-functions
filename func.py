@@ -21,7 +21,7 @@ def handler(ctx, data: io.BytesIO=None):
         headers={"Content-Type": "application/json"}
     )
 """
-def handelr(ctx, data: io.BytesIO=None):
+def handler(ctx, data: io.BytesIO=None):
     try:
         obj_client, namespace, bucket, main_file = initialize_process()
         x = load_sheets(namespace, bucket, main_file)
