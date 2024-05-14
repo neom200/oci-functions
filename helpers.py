@@ -66,7 +66,7 @@ sheet_names = ['PISO_ICB',
  'Planilha7']
 
 def initialize_process():
-    ads.set_auth(auth="api_key", oci_config_location="/home/lucas_souz/fn/.oci/, profile="DEFAULT")
+    ads.set_auth(auth="api_key", oci_config_location="/home/lucas_souz/fn/.oci/", profile="DEFAULT")
     config = from_file(file_location="/home/lucas_souz/fn/.oci/")
     obj_client = ObjectStorageClient(config)
     namespace = "grqn05sriwg6"
