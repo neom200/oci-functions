@@ -68,7 +68,7 @@ sheet_names = ['PISO_ICB',
 ads.set_auth(auth="api_key", oci_config_location="/home/lucas_souz/.oci/config", profile="DEFAULT")
 
 def initialize_process():
-    config = from_file(file_location="/home/lucas_souz/.oci/config", 'DEFAULT')
+    config = from_file(file_location="/home/lucas_souz/.oci/config")
     obj_client = ObjectStorageClient(config)
     namespace = "grqn05sriwg6"
     bucket = "RAW"
