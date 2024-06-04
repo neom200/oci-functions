@@ -97,7 +97,7 @@ def first_transformation(all_sheets):
 
 def second_transformation(planilhas_vazias):
     new_sheets = {}
-
+    
     for sheet in planilhas_vazias.keys():
         df = planilhas_vazias[sheet].copy()
         
@@ -131,7 +131,10 @@ def second_transformation(planilhas_vazias):
         if sheet == "ROTEIRIZAÇÃO":
             df = df.iloc[1:, 6:]
         if sheet == "LEVANTES":
-            df = df.iloc[6:, 1:]
+            df1 = df.iloc[6:, 1:]
+            df2 = df.iloc[:7, 19:].transpose().reset_index().copy()
+            new_sheets[sheet+"_A"] = df1.copy()
+            new_sheets[sheet+"_B"] = df2.copy()
         if sheet == "DB_G":
             df1 = df.iloc[1:17, :5]
             df2 = df.iloc[20:, :9]
@@ -140,11 +143,20 @@ def second_transformation(planilhas_vazias):
             new_sheets[sheet+"_2"] = df2.copy()
             new_sheets[sheet+"_3"] = df3.copy()
         if sheet == "PG_CROSS":
-            df = df.iloc[3:, 1:]
+            df1 = df.iloc[3:, :]
+            df2 = df.iloc[:4, 20:].transpose().reset_index()
+            new_sheets[sheet+"_A"] = df1.copy()
+            new_sheets[sheet+"_B"] = df2.copy()
         if sheet == "PG_PLUMA":
-            df = df.iloc[3:, 1:]
+            df1 = df.iloc[3:, 1:]
+            df2 = df.iloc[:4, 25:].transpose().reset_index()
+            new_sheets[sheet+"_A"] = df1.copy()
+            new_sheets[sheet+"_B"] = df2.copy()
         if sheet == "JN_PLUMA":
-            df = df.iloc[5:, :]
+            df1 = df.iloc[5:, :]
+            df2 = df.iloc[:6, 10:].transpose().reset_index()
+            new_sheets[sheet+"_A"] = df1.copy()
+            new_sheets[sheet+"_B"] = df2.copy()
         if sheet == "DASH_PLUMA":
             df1 = df.iloc[:16]
             df2 = df.iloc[16:]
@@ -153,17 +165,35 @@ def second_transformation(planilhas_vazias):
         if sheet == "MAPA_PLUMA":
             df = df.iloc[:, :4]
         if sheet == "PG_MD(INT)":
-            df = df.iloc[3:, :]
+            df1 = df.iloc[3:, :]
+            df2 = df.iloc[:4, 26+12:].transpose().reset_index()
+            new_sheets[sheet+"_A"] = df1.copy()
+            new_sheets[sheet+"_B"] = df2.copy()
         if sheet == "PG_MD(EXT)":
-            df = df.iloc[4:, :]
+            df1 = df.iloc[4:, :]
+            df2 = df.iloc[:5, 40:].transpose().reset_index()
+            new_sheets[sheet+"_A"] = df1.copy()
+            new_sheets[sheet+"_B"] = df2.copy()
         if sheet == "PG_MN(EXT)":
-            df = df.iloc[4:-2, :]
+            df1 = df.iloc[4:-2, :]
+            df2 = df.iloc[:5, 26+1:].transpose().reset_index().copy()
+            new_sheets[sheet+"_A"] = df1.copy()
+            new_sheets[sheet+"_B"] = df2.copy()
         if sheet == "PG_GL(EXT)":
-            df = df.iloc[4:, :]
+            df1 = df.iloc[4:, :]
+            df2 = df.iloc[:5, 34:].transpose().reset_index()
+            new_sheets[sheet+"_A"] = df1.copy()
+            new_sheets[sheet+"_B"] = df2.copy()
         if sheet == "PG_OUT(EXT)":
-            df = df.iloc[4:-1, :]
+            df1 = df.iloc[4:-1, :]
+            df2 = df.iloc[:5, 26+1:].transpose().reset_index().copy()
+            new_sheets[sheet+"_A"] = df1.copy()
+            new_sheets[sheet+"_B"] = df2.copy()
         if sheet == "PG_ADM":
-            df = df.iloc[4:]
+            df1 = df.iloc[4:]
+            df2 = df.iloc[:5, 41:].transpose().reset_index()
+            new_sheets[sheet+"_A"] = df1.copy()
+            new_sheets[sheet+"_B"] = df2.copy()
         if sheet == "JN_ADM":
             df = df.iloc[5:-1]
         if sheet == "CX.SUSP":
@@ -190,9 +220,19 @@ def second_transformation(planilhas_vazias):
             new_sheets[sheet+"_1"] = df1.copy()
             new_sheets[sheet+"_2"] = df2.copy()
         new_sheets[sheet] = df
-
+    
     new_sheets.pop("DASH_MD")
     new_sheets.pop("DB_G")
+    new_sheets.pop("JN_PLUMA")
+    new_sheets.pop("LEVANTES")
+    new_sheets.pop("PG_ADM")
+    new_sheets.pop("PG_CROSS")
+    new_sheets.pop("PG_GL(EXT)")
+    new_sheets.pop("PG_MD(EXT)")
+    new_sheets.pop("PG_MD(INT)")
+    new_sheets.pop("PG_MN(EXT)")
+    new_sheets.pop("PG_OUT(EXT)")
+    new_sheets.pop("PG_PLUMA")
     new_sheets.pop("DASH_PLUMA")
     new_sheets.pop("DASH_M+1")
     new_sheets.pop("Ficha_TRO")
@@ -202,7 +242,7 @@ def second_transformation(planilhas_vazias):
 
 def third_transformation(new_sheets):
     novas_sheets = {}
-
+    
     for sheet in new_sheets.keys():
         df = new_sheets[sheet].copy()
         
@@ -244,7 +284,7 @@ def third_transformation(new_sheets):
             df = transpose_dataframe(df)
         if sheet == "ROTEIRIZAÇÃO":
             df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
-        if sheet == "LEVANTES":
+        if sheet == "LEVANTES_A" or sheet == "LEVANTES_B":
             df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
         if sheet == "DB_G_1":
             df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
@@ -252,30 +292,44 @@ def third_transformation(new_sheets):
             df = arranjar_colunas_juntar_nome(df)
         if sheet == "DB_G_3":
             df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
-        if sheet == "PG_CROSS":
+        if sheet == "PG_CROSS_A":
+            df = df.rename(columns=mapa_substituir_cols_padrao(df)).iloc[2:, :]
+        if sheet == "PG_CROSS_B":
+            df = df.rename(columns=mapa_substituir_cols_padrao(df)).iloc[1:, :]
+        if sheet == "PG_PLUMA_A" or sheet == "PG_PLUMA_B":
             df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
-        if sheet == "PG_PLUMA":
+        if sheet == "JN_PLUMA_A" or sheet == "JN_PLUMA_B":
             df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
-        if sheet == "JN_PLUMA":
-            df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
+            if sheet == "JN_PLUMA_A":
+                df.columns.values[8] = "STATUS2"
+            if sheet == "JN_PLUMA_B":
+                df.columns.values[-2] = "DIA DA SEMANA"
         if sheet == "DASH_PLUMA_1":
             df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
         if sheet == "DASH_PLUMA_2":
             df = arranjar_colunas_juntar_nome(df)
         if sheet == "Reserva Amaggi":
             df = transpose_dataframe(df)
-        if sheet == "PG_MD(INT)":
+        if sheet == "PG_MD(INT)_A" or sheet == "PG_MD(INT)_B":
             df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
-        if sheet == "PG_MD(EXT)":
+        if sheet == "PG_MD(EXT)_A":
+            df = df.rename(columns=mapa_substituir_cols_padrao(df)).iloc[3:, :]
+        if sheet == "PG_MD(EXT)_B":
+            df = df.rename(columns=mapa_substituir_cols_padrao(df)).iloc[1:, :]
+        if sheet == "PG_MN(EXT)_A" or sheet == "PG_MN(EXT)_B":
             df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
-        if sheet == "PG_MN(EXT)":
+        if sheet == "PG_GL(EXT)_A":
+            df = df.rename(columns=mapa_substituir_cols_padrao(df)).iloc[3:, :]
+        if sheet == "PG_GL(EXT)_B":
+            df = df.rename(columns=mapa_substituir_cols_padrao(df)).iloc[1:, :]
+        if sheet == "PG_OUT(EXT)_A":
+            df = df.rename(columns=create_columns_map(df)).iloc[2:, :]
+        if sheet == "PG_OUT(EXT)_B":
             df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
-        if sheet == "PG_GL(EXT)":
-            df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
-        if sheet == "PG_OUT(EXT)":
-            df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
-        if sheet == "PG_ADM":
-            df = df.rename(columns=create_columns_map(df)).iloc[1:, :]
+        if sheet == "PG_ADM_A":
+            df = df.rename(columns=mapa_substituir_cols_padrao(df)).iloc[2:, :]
+        if sheet == "PG_ADM_B":
+            df = df.rename(columns=mapa_substituir_cols_padrao(df)).iloc[1:, :]
         if sheet == "PROGRAMA":
             df = transpose_dataframe(df)
         if sheet == "JN_ADM":
@@ -317,6 +371,46 @@ def fourth_transformation(novas_sheets):
         novas_limpas[sheet] = df
 
     return novas_limpas
+
+def extra_date_transformation(novas_sheets):
+    novas_transformadas = {}
+    for sheet in novas_sheets.keys():
+        df = novas_sheets[sheet].copy()
+    
+        if sheet == "JN_PLUMA_A":
+            old_cols = df.columns.values[11:]
+            df = df.rename(columns=rename_date_columns(old_cols))
+        if sheet == "LEVANTES_A":
+            old_cols = list(df.columns.values[20:])
+            df = df.rename(columns=rename_date_columns(old_cols))
+        if sheet == "PG_ADM_A":
+            old_cols = df.columns.values[42:]
+            df = df.rename(columns=rename_date_columns(old_cols))
+        if sheet == "PG_CROSS_A":
+            old_cols = df.columns.values[21:]
+            df = df.rename(columns=rename_date_columns(old_cols))
+        if sheet == "PG_GL(EXT)_A":
+            old_cols = df.columns.values[35:]
+            df = df.rename(columns=rename_date_columns(old_cols))
+        if sheet == "PG_MD(EXT)_A":
+            old_cols = df.columns.values[41:]
+            df = df.rename(columns=rename_date_columns(old_cols))
+        if sheet == "PG_MD(INT)_A":
+            old_cols = df.columns.values[26+13:]
+            df = df.rename(columns=rename_date_columns(old_cols))
+        if sheet == "PG_MN(EXT)_A":
+            old_cols = df.columns.values[26+2:]
+            df = df.rename(columns=rename_date_columns(old_cols))
+        if sheet == "PG_OUT(EXT)_A":
+            old_cols = df.columns.values[26+2:]
+            df = df.rename(columns=rename_date_columns(old_cols))
+        if sheet == "PG_PLUMA_A":
+            old_cols = df.columns.values[25:]
+            df = df.rename(columns=rename_date_columns(old_cols))
+    
+        novas_transformadas[sheet] = df
+
+    return novas_transformadas
 
 def fifth_transformation(novas_limpas):
     novas_no_dups = {}

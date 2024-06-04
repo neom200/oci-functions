@@ -20,6 +20,9 @@ def handler(ctx, data: io.BytesIO=None):
         print("> 3a Transformação")
         x = third_transformation(x)
 
+        print("> Extra data formation")
+        x = extra_date_transformation(x)
+
         print("> 4a Transformação")
         x = fourth_transformation(x)
 
