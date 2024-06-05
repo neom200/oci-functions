@@ -65,10 +65,10 @@ sheet_names = ['PISO_ICB',
  'RESUMO PUMA',
  'Planilha7']
 
-ads.set_auth(auth="api_key", oci_config_location="/home/lucas_souz/.oci/config", profile="DEFAULT")
+ads.set_auth(auth="api_key", oci_config_location="/home/lucas/.oci/config", profile="DEFAULT")
 
 def initialize_process():
-    config = from_file(file_location="/home/lucas_souz/.oci/config")
+    config = from_file(file_location="/home/lucas/.oci/config")
     obj_client = ObjectStorageClient(config)
     namespace = "grqn05sriwg6"
     bucket = "RAW"
