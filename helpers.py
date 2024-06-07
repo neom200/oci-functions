@@ -6,6 +6,7 @@ import oci
 import ads
 from ads.common.auth import default_signer
 from extra_funcs import *
+from io import BytesIO
 
 sheet_names = ['PISO_ICB',
  'TRENS',
@@ -65,26 +66,25 @@ sheet_names = ['PISO_ICB',
  'RESUMO PUMA',
  'Planilha7']
 
-ads.set_auth(auth="api_key", oci_config_location="/home/lucas_souz/.oci/config", profile="DEFAULT")
+ads.set_auth(auth='resource_principal')
 
 def initialize_process():
-    config = from_file(file_location="/home/lucas_souz/.oci/config")
+    config = oci.auth.signers.get_resource_principals_signer()
     obj_client = ObjectStorageClient(config)
     namespace = "grqn05sriwg6"
     bucket = "RAW"
     main_file = "Plano_Produção_Mercado_Externo.xlsx"
     return obj_client, namespace, bucket, main_file
 
-def load_sheets(namespace, bucket, main_file):
+def load_sheets(obj_client, namespace, bucket, main_file):
+    res = obj_client.get_object(namespace, bucket, main_file)
+    content = res.data.content
+    excel_data = BytesIO(content)
+    full_file = pd.read_excel(excel_data, sheet_name=None)
+
     all_sheets = {}
-    for sheet in sheet_names:
-        df = pd.read_excel(f"oci://{bucket}@{namespace}/{main_file}", sheet_name=sheet, storage_options=default_signer())
-
-        df = df.dropna(how='all', axis='columns')
-        df = df.dropna(how='all')
-
-        all_sheets[sheet] = df
-
+    for sheet, data in full_file.items():
+        all_sheets[sheet] = pd.DataFrame(data)
     return all_sheets
 
 def first_transformation(all_sheets):
