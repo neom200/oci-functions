@@ -662,12 +662,13 @@ def seventh_transformation(novos_dados):
 
 def eight_transformation(parquets_sheets, obj_client):
     object_storage_namespace = "grqn05sriwg6"
-    object_storage_bucket = "TRUSTED"
+    object_storage_bucket = "STAGE"
+    object_storage_folder = "PPME FILES"
 
     for sheet in parquets_sheets.keys():
         obj_client.put_object(
             namespace_name=object_storage_namespace,
             bucket_name=object_storage_bucket,
-            object_name=sheet,
+            object_name=f"{object_storage_folder}/{sheet}.parquet",
             put_object_body=parquets_sheets[sheet]
         )
